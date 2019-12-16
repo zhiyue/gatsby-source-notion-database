@@ -5,8 +5,9 @@ const getPageHtml = async(url) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
-    await page.waitFor(18000);
+    await page.waitFor(15000);
     await page.waitForSelector('#notion-app');
+    await page.waitFor(15000);
     const data = await page.evaluate(() => {
         // 图片链接转换
         document.querySelectorAll('div.notion-page-content  img').forEach(item => {
