@@ -1,6 +1,6 @@
 {
   "name": "zhiyue-gatsby-source-notion-database",
-  "version": "0.6.10",
+  "version": "0.6.11",
   "description": "Load data from Notion's database",
   "main": "index.js",
   "scripts": {
