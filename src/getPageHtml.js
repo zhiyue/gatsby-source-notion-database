@@ -1,12 +1,12 @@
 const puppeteer = require('puppeteer');
 
 process.setMaxListeners(0)
-const getPageHtml = async (url) => {
+const getPageHtml = async(url) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
+    await page.waitFor(18000);
     await page.waitForSelector('#notion-app');
-    await page.waitFor(8000);
     const data = await page.evaluate(() => {
         // 图片链接转换
         document.querySelectorAll('div.notion-page-content  img').forEach(item => {
@@ -27,11 +27,11 @@ const getPageHtml = async (url) => {
                     throw Error(`blockId: ${typeof blockId} must be string`)
                 }
                 if (blockId.match("^[a-zA-Z0-9]+$")) {
-                    return blockId.substr(0, 8) + "-"
-                        + blockId.substr(8, 4) + "-"
-                        + blockId.substr(12, 4) + "-"
-                        + blockId.substr(16, 4) + "-"
-                        + blockId.substr(20, 32)
+                    return blockId.substr(0, 8) + "-" +
+                        blockId.substr(8, 4) + "-" +
+                        blockId.substr(12, 4) + "-" +
+                        blockId.substr(16, 4) + "-" +
+                        blockId.substr(20, 32)
                 } else {
                     return blockId
                 }
@@ -57,18 +57,18 @@ const getPageHtml = async (url) => {
 
         // bookmark 修复，notion更改了 bookmark block 的生成规则，a 标签内没有 href了
         document.querySelectorAll("#notion-app > div > div.notion-cursor-listener > div > div.notion-scroller.vertical.horizontal > div.notion-page-content > div[data-block-id] > div > div > a").forEach(a => {
-            if (!a.href) {
-                a.href = a.querySelector("div > div:first-child > div:last-child").innerText
-            }
-        })
-        // 表格视图 CSS 修复
+                if (!a.href) {
+                    a.href = a.querySelector("div > div:first-child > div:last-child").innerText
+                }
+            })
+            // 表格视图 CSS 修复
         document.querySelectorAll("div.notion-scroller.horizontal").forEach(item => {
-            item.children[0].style.padding = 0
-            item.previousElementSibling.style.paddingLeft = 0
-            // 表格在 safari & edge 中显示有问题。
-            item.style.overflowX = "scroll"
-        })
-        // 文章内容
+                item.children[0].style.padding = 0
+                item.previousElementSibling.style.paddingLeft = 0
+                    // 表格在 safari & edge 中显示有问题。
+                item.style.overflowX = "scroll"
+            })
+            // 文章内容
         let content = document.querySelector('#notion-app > div > div.notion-cursor-listener > div > div > div.notion-page-content')
 
 
@@ -79,8 +79,7 @@ const getPageHtml = async (url) => {
         })
         if (content) {
             return content.innerHTML
-        }
-        else {
+        } else {
             return 'error'
         }
     })
